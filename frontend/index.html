@@ -1,32 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fruits 360 Classifier</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <!-- Header -->
     <header>
-        <h1>Fruits 360 Classifier</h1>
+        <div class="header-content">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+            </div>
+            <h1>Hệ Thống Phân Loại Hoa Quả</h1>
+            <div class="user-info">
+                <img src="{{ avatar_url }}" alt="Avatar" class="avatar">
+                <span>Hi, {{ username }}</span>
+                <div id="logout-menu" class="logout-menu">
+                    <a href="{{ url_for('logout') }}">Đăng Xuất</a>
+                </div>
+            </div>
+        </div>
     </header>
+
+    <!-- Navbar -->
+    <nav>
+        <ul class="nav-links">
+            <li><a href="/">Trang Chủ</a></li>
+            <li><a href="/info">Thông Tin Hoa Quả</a></li>
+            <li><a href="/search">Tra Cứu</a></li>
+            <li><a href="/history">Lịch Sử Dự Đoán</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
     <div class="container">
         <h2>Tải Hình Ảnh Bạn Muốn Nhận Dạng</h2>
         <input type="file" id="imageUpload">
         <button onclick="uploadImage()">Nhận Dạng</button>
-        
+
         <div id="result-container">
-            <img id="uploadedImage" style="display: none; max-width: 300px; margin-top: 10px;" alt="Uploaded Image">
-            <table id="resultTable" style="display: none; margin-top: 10px;">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tên Loại</th>
-                        <th>Độ chính xác</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="image-section">
+                <img id="uploadedImage" alt="Uploaded Image">
+            </div>
+            <div class="table-section">
+                <table id="resultTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Loại</th>
+                            <th>Độ chính xác</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

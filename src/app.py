@@ -66,11 +66,29 @@ def login():
     
     return render_template("login.html")
 
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    return redirect(url_for("login"))
+
+
 @app.route("/", methods=["GET"])
 def index():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    return render_template("index.html")
+
+    # Lấy thông tin tài khoản từ database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT TaiKhoan, Avatar FROM TaiKhoan WHERE ID_TK = ?", (session["user_id"],))
+    user = cursor.fetchone()
+    conn.close()
+
+    if not user:
+        return redirect(url_for("logout"))
+
+    return render_template("index.html", username=user.TaiKhoan, avatar_url=user.Avatar)
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
