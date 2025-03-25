@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fruits 360 Classifier</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Fruits 360 Classifier</h1>
+    </header>
+    <div class="container">
+        <h2>Upload an Image for Classification</h2>
+        <input type="file" id="imageUpload">
+        <button onclick="uploadImage()">Predict</button>
+        <p id="result"></p>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
