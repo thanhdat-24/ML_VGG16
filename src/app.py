@@ -6,7 +6,9 @@ import io
 import os
 import logging
 import pyodbc
+import base64
 from config import IMG_SIZE, TRAIN_DIR, MODEL_SAVE_PATH
+
 
 # Khởi tạo Flask, chỉ định thư mục chứa HTML và static files
 app = Flask(__name__, 
@@ -60,7 +62,7 @@ def login():
             session["user_id"] = user.ID_TK
             return redirect(url_for("index"))
         else:
-            return render_template("login.html", error="Invalid username or password")
+            return render_template("login.html", error="Tên người dùng hoặc mật khẩu không hợp lệ !")
     
     return render_template("login.html")
 
@@ -86,13 +88,23 @@ def predict():
         image = Image.open(io.BytesIO(file.read()))
         processed_image = preprocess_image(image)
 
-        # Dự đoán
-        predictions = model.predict(processed_image)
-        predicted_class = class_names[np.argmax(predictions)]
-        confidence = float(np.max(predictions))  # Độ chính xác
+        # Chuyển ảnh thành base64 để hiển thị trên frontend
+        img_io = io.BytesIO()
+        image.save(img_io, format="PNG")
+        img_base64 = "data:image/png;base64," + base64.b64encode(img_io.getvalue()).decode()
 
-        app.logger.debug(f"Prediction: {predicted_class}, Confidence: {confidence}")
-        return jsonify({"prediction": predicted_class, "confidence": confidence})
+        # Dự đoán
+        predictions = model.predict(processed_image)[0]
+        top_5_indices = predictions.argsort()[-5:][::-1]  # Lấy 5 kết quả có xác suất cao nhất
+        top_5_labels = [class_names[idx] for idx in top_5_indices]
+        top_5_probs = [float(predictions[idx]) for idx in top_5_indices]
+
+        app.logger.debug(f"Top 5 Predictions: {list(zip(top_5_labels, top_5_probs))}")
+
+        return jsonify({
+            "image": img_base64,  # Trả về ảnh dưới dạng base64
+            "predictions": [{"label": label, "confidence": conf} for label, conf in zip(top_5_labels, top_5_probs)]
+        })
     except Exception as e:
         app.logger.error(f"Error processing image: {e}")
         return jsonify({"error": "Error processing image"}), 500

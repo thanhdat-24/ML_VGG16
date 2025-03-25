@@ -18,6 +18,7 @@ header {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: inline-block;
+    width: 60%;
 }
 
 button {
@@ -48,11 +49,42 @@ label {
     margin-top: 10px;
 }
 
-input[type="text"], input[type="password"] {
-    width: 100%;
+input[type="file"] {
+    display: block;
+    margin: 10px auto;
+}
+
+#result-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+#uploadedImage {
+    max-width: 300px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+table {
+    width: 50%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+th, td {
+    border: 1px solid #ddd;
     padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
 }

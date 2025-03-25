@@ -9,10 +9,23 @@
         <h1>Fruits 360 Classifier</h1>
     </header>
     <div class="container">
-        <h2>Upload an Image for Classification</h2>
+        <h2>Tải Hình Ảnh Bạn Muốn Nhận Dạng</h2>
         <input type="file" id="imageUpload">
-        <button onclick="uploadImage()">Predict</button>
-        <p id="result"></p>
+        <button onclick="uploadImage()">Nhận Dạng</button>
+        
+        <div id="result-container">
+            <img id="uploadedImage" style="display: none; max-width: 300px; margin-top: 10px;" alt="Uploaded Image">
+            <table id="resultTable" style="display: none; margin-top: 10px;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên Loại</th>
+                        <th>Độ chính xác</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
