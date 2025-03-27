@@ -4,7 +4,7 @@ DATASET_PATH = os.path.abspath("dataset")
 TRAIN_DIR = os.path.join(DATASET_PATH, "Training")
 TEST_DIR = os.path.join(DATASET_PATH, "Test")
 # Đường dẫn lưu mô hình
-MODEL_SAVE_PATH = os.path.abspath(os.path.join("saved_model", "vgg16_fruits360(1).h5"))
+MODEL_SAVE_PATH = os.path.abspath(os.path.join("saved_model", "vgg16_fruits360.h5"))
 # Tham số huấn luyện
 IMG_SIZE = (100, 100)  # Kích thước ảnh đầu vào
 BATCH_SIZE = 64  # Kích thước batch

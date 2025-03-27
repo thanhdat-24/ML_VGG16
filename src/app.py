@@ -9,11 +9,10 @@ import pyodbc
 import base64
 from config import IMG_SIZE, TRAIN_DIR, MODEL_SAVE_PATH
 
-
 # Khởi tạo Flask, chỉ định thư mục chứa HTML và static files
 app = Flask(__name__, 
-            template_folder=os.path.abspath("frontend"),  # Thư mục chứa index.html
-            static_folder=os.path.abspath("frontend"))    # Thư mục chứa styles.css, script.js
+            template_folder=os.path.abspath("frontend"),  # Thư mục chứa shop.html
+            static_folder=os.path.abspath("frontend"))    # Chứa assets/css, assets/js
 
 # Configure secret key for session management
 app.secret_key = 'your_secret_key'
@@ -33,9 +32,9 @@ class_names = sorted([d for d in os.listdir(TRAIN_DIR) if os.path.isdir(os.path.
 # Database connection
 def get_db_connection():
     conn = pyodbc.connect('DRIVER={SQL Server};'
-    'SERVER=DESKTOP-CNH52PV\THANHDAT24;'
-    'DATABASE=QL_Fruit360;'
-    'UID=sa;PWD=123456')
+                          'SERVER=DESKTOP-CNH52PV\THANHDAT24;'
+                          'DATABASE=QL_Fruit360;'
+                          'UID=sa;PWD=123456')
     return conn
 
 def preprocess_image(image):
@@ -71,7 +70,6 @@ def logout():
     session.pop("user_id", None)
     return redirect(url_for("login"))
 
-
 @app.route("/", methods=["GET"])
 def index():
     if "user_id" not in session:
@@ -87,8 +85,7 @@ def index():
     if not user:
         return redirect(url_for("logout"))
 
-    return render_template("index.html", username=user.TaiKhoan, avatar_url=user.Avatar)
-
+    return render_template("indexTemplate.html", username=user.TaiKhoan, avatar_url=user.Avatar)
 
 @app.route("/predict", methods=["POST"])
 def predict():

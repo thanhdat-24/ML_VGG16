@@ -1,27 +1,15 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Xử lý hiển thị menu đăng xuất
-    const userInfo = document.querySelector(".user-info");
-    const logoutMenu = document.getElementById("logout-menu");
-
-    userInfo.addEventListener("click", function(event) {
-        logoutMenu.style.display = logoutMenu.style.display === "block" ? "none" : "block";
-        event.stopPropagation(); // Ngăn chặn sự kiện lan ra ngoài
-    });
-
-    // Ẩn menu đăng xuất khi nhấn ra ngoài
-    document.addEventListener("click", function(event) {
-        if (!userInfo.contains(event.target)) {
-            logoutMenu.style.display = "none";
-        }
-    });
+    let imageUpload = document.getElementById("fruit360-imageUpload");
+    let uploadedImage = document.getElementById("fruit360-uploadedImage");
+    let loadingSpinner = document.getElementById("fruit360-loading");
+    let resultTable = document.getElementById("fruit360-resultTable");
 
     // Xử lý tải và hiển thị ảnh
-    document.getElementById("imageUpload").addEventListener("change", function() {
+    imageUpload.addEventListener("change", function() {
         let file = this.files[0];
         if (file) {
             let reader = new FileReader();
             reader.onload = function(e) {
-                let uploadedImage = document.getElementById("uploadedImage");
                 uploadedImage.src = e.target.result;
                 uploadedImage.style.display = "block";
             };
@@ -30,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Gửi ảnh lên server để nhận diện
-    window.uploadImage = function() {
-        let fileInput = document.getElementById("imageUpload").files[0];
+    window.fruit360UploadImage = function() {
+        let fileInput = imageUpload.files[0];
         if (!fileInput) {
             alert("Vui lòng chọn ảnh!");
             return;
@@ -40,17 +28,23 @@ document.addEventListener("DOMContentLoaded", function() {
         let formData = new FormData();
         formData.append("file", fileInput);
 
+        // Hiển thị loading spinner
+        loadingSpinner.style.display = "block";
+        resultTable.style.display = "none";
+
         fetch("/predict", {
             method: "POST",
             body: formData
         })
         .then(response => response.json())
         .then(data => {
+            loadingSpinner.style.display = "none";
+
             if (data.error) {
                 alert("Lỗi: " + data.error);
                 console.error("Lỗi:", data.error);
             } else {
-                let tbody = document.querySelector("#resultTable tbody");
+                let tbody = document.querySelector("#fruit360-resultTable tbody");
                 tbody.innerHTML = "";
                 data.predictions.forEach((item, index) => {
                     let row = tbody.insertRow();
@@ -58,9 +52,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     row.insertCell(1).innerText = item.label;
                     row.insertCell(2).innerText = (item.confidence * 100).toFixed(2) + "%";
                 });
-                document.getElementById("resultTable").style.display = "block";
+                resultTable.style.display = "block";
             }
         })
-        .catch(error => console.error("Lỗi:", error));
+        .catch(error => {
+            loadingSpinner.style.display = "none";
+            alert("Có lỗi xảy ra khi nhận diện!");
+            console.error("Lỗi:", error);
+        });
     };
 });
